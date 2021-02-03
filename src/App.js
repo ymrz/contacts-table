@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import TableRow from "./components/TableRow";
+import ColumnHeaders from "./components/ColumnHeaders";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -9,7 +12,8 @@ function App() {
       "Api-Token":
         "bcd062dedabcd0f1ac8a568cdcf58660c44d7e79b91763cc1a5d0c03d52c522d851fceb0",
     };
-    const apiUrl = "https://sahmed93846.api-us1.com/api/3/contacts";
+    const apiUrl =
+      "https://sahmed93846.api-us1.com/api/3/contacts?include=id,contactTags.tag,contactLists.list,organization";
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
     fetch(proxyurl + apiUrl, {
       method: "GET",
@@ -22,14 +26,20 @@ function App() {
       },
     })
       .then((response) => response.json())
-      .then((data) => setContacts(data.contacts));
+      .then((data) => setContacts(data.contacts))
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
-  console.log(contacts);
+
   return (
-    <div>
-      {contacts.map((contact) => {
-        return <p>{contact.email}</p>;
-      })}
+    <div className="container">
+      <table className="table">
+        <tbody>
+          <ColumnHeaders />
+          <TableRow contacts={contacts} />
+        </tbody>
+      </table>
     </div>
   );
 }
